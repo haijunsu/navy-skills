@@ -4,8 +4,8 @@ Every project must contain the following top-level folders:
 
 | Folder    | Purpose                                      |
 |-----------|----------------------------------------------|
-| `be/`     | Backend source code                          |
-| `fe/`     | Frontend source code                         |
+| `backend/`  | Backend source code                          |
+| `frontend/` | Frontend source code                         |
 | `docs/`   | Documentation                                |
 | `scripts/`| Utility and automation scripts               |
 
