@@ -5,55 +5,65 @@ import subprocess
 def get_git_root():
     try:
         # Try to get the superproject root first (if we are in a submodule)
+        # git rev-parse --show-superproject-working-tree returns the root of the superproject
         superproject = subprocess.check_output(
             ['git', 'rev-parse', '--show-superproject-working-tree'],
             stderr=subprocess.STDOUT
         ).decode('utf-8').strip()
         
         if superproject:
-            return superproject
+            return os.path.abspath(superproject)
             
         # Fallback to the current repository root
-        return subprocess.check_output(
+        return os.path.abspath(subprocess.check_output(
             ['git', 'rev-parse', '--show-toplevel'],
             stderr=subprocess.STDOUT
-        ).decode('utf-8').strip()
+        ).decode('utf-8').strip())
     except subprocess.CalledProcessError:
         # Fallback to directory-based detection if git fails
+        # script is at <root>/scripts/rules_validation/apply_rules.py
         script_path = os.path.abspath(__file__)
         return os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(script_path))))
 
 def verify_and_apply():
-    # Identify where the rules submodule is located relative to the script
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    submodule_root = os.path.dirname(os.path.dirname(script_dir))
-    submodule_name = os.path.basename(submodule_root)
-    
+    # 1. Get the project root (where the .git folder or superproject root is)
     project_root = get_git_root()
+    
+    # 2. Get the absolute path to the rules folder
+    # This script is at <submodule>/scripts/rules_validation/apply_rules.py
+    # The rules are at <submodule>/ai-rules/
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    rules_dir_abs = os.path.abspath(os.path.join(script_dir, '..', '..', 'ai-rules'))
 
-    print(f"Detected project root: {project_root}")
-    print(f"Detected submodule name: {submodule_name}")
+    # 3. Calculate the relative path from project root to rules
+    rules_rel_path = os.path.relpath(rules_dir_abs, project_root)
 
-    if not os.path.isdir(submodule_root):
-        print(f"Error: Submodule directory not found at {submodule_root}")
+    print(f"--- AI Rules Configuration ---")
+    print(f"Project Root: {project_root}")
+    print(f"Rules Path (Abs): {rules_dir_abs}")
+    print(f"Rules Path (Rel): {rules_rel_path}")
+    print(f"-------------------------------")
+
+    if not os.path.isdir(rules_dir_abs):
+        print(f"Error: Rules directory not found at {rules_dir_abs}")
         sys.exit(1)
 
     configs = {
         'CLAUDE.md': {
-            'content': f"# CLAUDE.md\nRules for this repository are managed in the `{submodule_name}/ai-rules/` directory.\n",
-            'check': f'{submodule_name}/ai-rules/'
+            'content': f"# CLAUDE.md\nRules for this repository are managed in the `{rules_rel_path}/` directory.\n",
+            'check': f'{rules_rel_path}/'
         },
         'GEMINI.md': {
-            'content': f"# Project Instructions\nThis project adheres to the standards defined in the `{submodule_name}/ai-rules/` directory.\n\n## Rule Index\n- [Tech Stack]({submodule_name}/ai-rules/stack.md)\n- [Code Style]({submodule_name}/ai-rules/code-style.md)\n- [Workflow]({submodule_name}/ai-rules/workflow.md)\n",
-            'check': f'{submodule_name}/ai-rules/stack.md'
+            'content': f"# Project Instructions\nThis project adheres to the standards defined in the `{rules_rel_path}/` directory.\n\n## Rule Index\n- [Tech Stack]({rules_rel_path}/stack.md)\n- [Code Style]({rules_rel_path}/code-style.md)\n- [Workflow]({rules_rel_path}/workflow.md)\n",
+            'check': f'{rules_rel_path}/stack.md'
         },
         '.github/copilot-instructions.md': {
-            'content': f"# Copilot Instructions\nFollow the project standards and workflows defined in the `{submodule_name}/ai-rules/` directory:\n- Tech Stack: {submodule_name}/ai-rules/stack.md\n- Code Style: {submodule_name}/ai-rules/code-style.md\n- Workflow: {submodule_name}/ai-rules/workflow.md\n",
-            'check': f'{submodule_name}/ai-rules/stack.md'
+            'content': f"# Copilot Instructions\nFollow the project standards and workflows defined in the `{rules_rel_path}/` directory:\n- Tech Stack: {rules_rel_path}/stack.md\n- Code Style: {rules_rel_path}/code-style.md\n- Workflow: {rules_rel_path}/workflow.md\n",
+            'check': f'{rules_rel_path}/stack.md'
         },
         'AGENTS.md': {
-            'content': f"# AGENTS.md\nRules for this repository are managed in the `{submodule_name}/ai-rules/` directory.\nRefer to the rules in:\n- [{submodule_name}/ai-rules/stack.md]({submodule_name}/ai-rules/stack.md)\n- [{submodule_name}/ai-rules/code-style.md]({submodule_name}/ai-rules/code-style.md)\n- [{submodule_name}/ai-rules/workflow.md]({submodule_name}/ai-rules/workflow.md)\n",
-            'check': f'{submodule_name}/ai-rules/stack.md'
+            'content': f"# AGENTS.md\nRules for this repository are managed in the `{rules_rel_path}/` directory.\nRefer to the rules in:\n- [{rules_rel_path}/stack.md]({rules_rel_path}/stack.md)\n- [{rules_rel_path}/code-style.md]({rules_rel_path}/code-style.md)\n- [{rules_rel_path}/workflow.md]({rules_rel_path}/workflow.md)\n",
+            'check': f'{rules_rel_path}/stack.md'
         }
     }
 
