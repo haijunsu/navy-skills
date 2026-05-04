@@ -1,6 +1,6 @@
 # AGENTS.md
-Rules for this repository are managed in the `navy-skills/ai-rules/` directory.
+Rules for this repository are managed in the `ai-rules/` directory.
 Refer to the rules in:
-- [navy-skills/ai-rules/stack.md](navy-skills/ai-rules/stack.md)
-- [navy-skills/ai-rules/code-style.md](navy-skills/ai-rules/code-style.md)
-- [navy-skills/ai-rules/workflow.md](navy-skills/ai-rules/workflow.md)
+- [ai-rules/stack.md](ai-rules/stack.md)
+- [ai-rules/code-style.md](ai-rules/code-style.md)
+- [ai-rules/workflow.md](ai-rules/workflow.md)
