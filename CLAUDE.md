@@ -4,15 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-`navy-skills` is a Python repository for AI skills, owned by Haijun (Navy) Su. The project is in its early stages — no source code or tooling configuration exists yet beyond a standard Python `.gitignore` and MIT license.
+`navy-skills` is a Python repository for AI skills, owned by Haijun (Navy) Su.
 
-## Language & Tooling
+## Project Rules
 
-The repository is configured for **Python** (evidenced by the `.gitignore`, which covers pytest, ruff, mypy, venv, and common Python packaging tools). When code is added, follow these conventions inferred from the ignored paths:
+All behavior, coding, and architectural rules are defined in the `ai-rules/` directory for cross-agent compatibility. Refer to these files for guidance:
 
-- **Linting/formatting**: Ruff (`.ruff_cache/` is gitignored)
-- **Type checking**: mypy or pytype (`.mypy_cache/`, `.pyre/`, `.pytype/` are gitignored)
-- **Testing**: pytest (`.pytest_cache/` is gitignored)
-- **Virtual environments**: `.venv/` or `venv/` (gitignored — do not commit)
-
-Once a `pyproject.toml`, `setup.py`, or equivalent is added, update this file with the actual build/lint/test commands.
+- **Tech Stack & Tooling**: [ai-rules/stack.md](ai-rules/stack.md) (Python, Ruff, Mypy, Pytest)
+- **Code Style**: [ai-rules/code-style.md](ai-rules/code-style.md)
+- **Testing**: [ai-rules/testing.md](ai-rules/testing.md)
+- **Project Structure**: [ai-rules/project-structure.md](ai-rules/project-structure.md)
+- **Branching & Git**: [ai-rules/branching.md](ai-rules/branching.md)
+- **Workflow & Design**: [ai-rules/workflow.md](ai-rules/workflow.md)
+- **Helper Scripts**: [ai-rules/helper-scripts.md](ai-rules/helper-scripts.md)
