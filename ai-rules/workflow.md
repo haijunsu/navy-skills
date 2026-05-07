@@ -12,11 +12,11 @@ This workflow is required for all substantive work: feature requests, bug fixes,
 
 Requirements, plans, solutions, checklists, and summaries must use a meaningful name with one of these prefixes based on work type:
 
-| Work type | Prefix | Example |
-| ----------- | -------- | ------- |
-| Feature / requirement | `req-` | `req-dark-mode.md` |
-| Bug fix | `bug-` | `bug-login-redirect.md` |
-| New tool / script | `tool-` | `tool-image-resize.md` |
+| Work type             | Prefix  | Example                 |
+| --------------------- | ------- | ----------------------- |
+| Feature / requirement | `req-`  | `req-dark-mode.md`      |
+| Bug fix               | `bug-`  | `bug-login-redirect.md` |
+| New tool / script     | `tool-` | `tool-image-resize.md`  |
 
 Never use numeric IDs like `fr-1.md` or `req-001.md`. Names must describe the work, not number it.
 
@@ -32,7 +32,7 @@ Follow these steps before writing any code:
 6. Present a summary to the user and **wait for approval** before touching any code.
 7. Implement one phase at a time:
    a. Make the code change
-   b. Write unit tests covering the changed behaviour (add `data-testid` attributes where needed to make CSS values testable via inline style)
+   b. Write unit tests covering the changed behavior (add `data-testid` attributes where needed to make CSS values testable via inline style)
    c. Run tests with `CI=true npm test -- --testPathPattern=<ComponentName> --watchAll=false`
    d. Only mark Verify items `[x]` after tests pass — never pre-check them
    e. Add a `Human approve Phase N` checkbox — only mark it when the user explicitly approves
